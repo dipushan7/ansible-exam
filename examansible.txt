@@ -1,0 +1,101 @@
+1) What is Ansible?
+It is an open source platform which configures management, task automation and application deployment.
+
+2) List Ansible’s advantages
+	. It is agentless and only requires SSH service running on target machine
+	. It comes with pre installed pyhton
+	. Due to low overhead it requires minimal resource
+	. It is written in .yml which is easy to learn and understand
+	. It is declarative and fulfills requirements needed to achieve it
+
+3) Explain what a “playbook” is.
+It is the tool’s building blocks. It is .yml script based file that sends commands to remote computers. It helps to configure environments by passing a script which is easier than using individual commands.   
+
+4) What’s an ad hoc command?
+It is a one shot command that initiates action on host without using a playbook.
+
+5) Explain the difference between a playbook and a play.
+A playbook consists one or more plays. A play is a set of tasks that run on managed hosts which consists of tasks.
+
+6) What is Prometheus?
+It is an application used for event monitoring and alerting. It records metrics in a time series database built using a HTTP pull module with flexible queries and real time alerting.
+
+7) What language is Prometheus written in?
+It is written in GO format and licensed under the Apache 2 license whose source code is available in github and is a graduated project of the icloud native.
+
+8) What license is Prometheus released under?
+It is released under Apache 2 License.
+
+9) Describe how Ansible works.
+Ansible is a combination of multiple pieces working together to become an automation tool. It consists of modules, playbooks, and plugins.
+Modules:
+These are codes that will get executed. There are multiple inbuilt modules that serve as a starting point for building tasks.
+Playbooks:
+It contain plays which is a group of tasks. This is the place to define the workflow or the steps needed to complete a process
+Plugins:
+These are special kinds of modules that run on the main control machine for logging purposes. 
+
+10) State the requirements for the Ansible server.
+       . Supports Operating systems: Redhat
+	. Latest stable release of ansible
+	. Minimum of 2GB RAM and 4+GB RAM recommended
+	. 20 GB hard disk
+	. 64-bit support required, kernel and runtime
+	. For Amazon EC2
+
+11) What are tags in ansible?
+Ansible tags helps to run extensive playbooks as a part of the opposed entire thing.
+
+12) What’s a handler?
+It is similar to a task in playbook but will only run if a task alerts the handler. It is automatically loaded by role . Handler will only run after the tasks are completed in a play.
+
+13) what is ansible roles
+Ansible role is a set of tasks to configure a host to server to configure a service. Roles are defined using .yml files with a predefined directory structure. A role directory structure contains directories: defaults, vars, tasks, files, templates, meta, handlers.
+
+Practical:
+
+1) Install Prometheus and node exporter using     ansible
+  - configure nodeexporter in prometheus.yml file
+---
+- name: Install prometheus
+  hosts: webservers
+  become: true
+  become_method: sudo
+
+  tasks:
+       - name: Download  prometheus
+
+         get_url:
+
+               url:  https://github.com/prometheus/prometheus/releases/download/v2.27.1/prometheus-2.27.1.linux-amd64.tar.gz
+
+               dest: /home/ubuntu
+
+       - name: Install Prometheus
+
+         unarchive:
+                 src : /home/ubuntu/prometheus-2.27.1.linux-amd64.tar.gz
+
+                 dest: /home/ubuntu
+cd /etc/ansible
+sudo vi hosts
+added slave ip address
+
+
+2) Write a playbook to create S3 bucket 
+---
+- name: Create a S3 Bucket
+  hosts: localhost
+  connection: local
+  vars_files:
+          - creds.yml
+  tasks:
+  - name : create a simple s3 bucket
+    amazon.aws.s3_bucket:
+            name: dipushanbucket
+            state: present
+            region: us-east-2
+            aws_access_key: ""
+            aws_secret_key: ""
+creds.yml has access key and secret key
+python3 -m pip install boto3
